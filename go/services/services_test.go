@@ -27,20 +27,23 @@ func GetVaccineCertFramePath() string {
 }
 
 func TestServiceBase_SetProfile(t *testing.T) {
-	base := ServiceBase{}
+	assert := assert.New(t)
+	base := Service{}
 	// No profile set, should be an error
 	ctxt, err := base.GetMetadata()
-	assert.EqualErrorf(t, err, "profile not set", "profile not set")
+	assert.EqualErrorf(err, "profile not set", "profile not set")
 	assert.Nil(t, ctxt)
 
 	walletService, err := createWalletServiceViaEnvVar(t)
+	assert.Nil(err)
 	demoWallet, err := walletService.CreateWallet("")
+	assert.Nil(err)
 
 	err = base.SetProfile(demoWallet)
-	assert.NoError(t, err)
+	assert.NoError(err)
 	ctxt, err = base.GetMetadata()
-	assert.NoError(t, err)
-	assert.NotNil(t, ctxt)
+	assert.NoError(err)
+	assert.NotNil(ctxt)
 }
 
 func TestCreateChannelIfNeeded(t *testing.T) {
@@ -68,7 +71,9 @@ func TestCreateChannelIfNeeded(t *testing.T) {
 }
 
 func TestVaccineCredentials(t *testing.T) {
+	assert := assert.New(t)
 	walletService, err := createWalletServiceViaEnvVar(t)
+	assert.Nil(err)
 	// SETUP ACTORS
 	// Create 3 different profiles for each participant in the scenario
 	allison, err := walletService.CreateWallet("")

@@ -21,17 +21,17 @@ import (
 
 type Document map[string]interface{}
 
-type ServiceBase struct {
+type Service struct {
 	capabilityInvocation string
 }
 
-type Service interface {
+type ServiceBase interface {
 	GetContext() (context.Context, error)
 	GetMetadata() (metadata.MD, error)
 	SetProfile(profile *sdk.WalletProfile) error
 }
 
-func (s *ServiceBase) GetContext() (context.Context, error) {
+func (s *Service) GetContext() (context.Context, error) {
 	md, err := s.GetMetadata()
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *ServiceBase) GetContext() (context.Context, error) {
 	return metadata.NewOutgoingContext(context.Background(), md), nil
 }
 
-func (s *ServiceBase) GetMetadata() (metadata.MD, error) {
+func (s *Service) GetMetadata() (metadata.MD, error) {
 	if s.capabilityInvocation == "" {
 		return nil, errors.New("profile not set")
 	}
@@ -48,7 +48,7 @@ func (s *ServiceBase) GetMetadata() (metadata.MD, error) {
 	}), nil
 }
 
-func (s *ServiceBase) SetProfile(profile *sdk.WalletProfile) error {
+func (s *Service) SetProfile(profile *sdk.WalletProfile) error {
 	capabilityStruct, err := structpb.NewStruct(map[string]interface{}{
 		"@context":         "https://w3id.org/security/v2",
 		"invocationTarget": profile.WalletId,
@@ -87,7 +87,7 @@ func (s *ServiceBase) SetProfile(profile *sdk.WalletProfile) error {
 }
 
 type WalletService interface {
-	Service
+	ServiceBase
 	RegisterOrConnect(email string) error
 	CreateWallet(securityCode string) (*sdk.WalletProfile, error)
 	IssueCredential(document Document) (Document, error)
@@ -105,7 +105,7 @@ func CreateWalletService(serviceAddress string, channel *grpc.ClientConn) (Walle
 	}
 
 	service := &WalletBase{
-		ServiceBase:      &ServiceBase{},
+		Service:          &Service{},
 		channel:          channel,
 		walletClient:     sdk.NewWalletClient(channel),
 		credentialClient: sdk.NewCredentialClient(channel),
@@ -145,7 +145,7 @@ func CreateChannelIfNeeded(serviceAddress string, channel *grpc.ClientConn, bloc
 }
 
 type WalletBase struct {
-	*ServiceBase
+	*Service
 	channel          *grpc.ClientConn
 	walletClient     sdk.WalletClient
 	credentialClient sdk.CredentialClient
@@ -396,13 +396,13 @@ func (w *WalletBase) VerifyProof(proofDocument Document) (bool, error) {
 }
 
 type ProviderService interface {
-	Service
+	ServiceBase
 	InviteParticipant(request *sdk.InviteRequest) (*sdk.InviteResponse, error)
 	InvitationStatus(request *sdk.InvitationStatusRequest) (*sdk.InvitationStatusResponse, error)
 }
 
 type ProviderBase struct {
-	*ServiceBase
+	*Service
 	channel        *grpc.ClientConn
 	providerClient sdk.ProviderClient
 }
@@ -414,7 +414,7 @@ func CreateProviderService(serviceAddress string, channel *grpc.ClientConn) (Pro
 	}
 
 	service := &ProviderBase{
-		ServiceBase:    &ServiceBase{},
+		Service:        &Service{},
 		channel:        channel,
 		providerClient: sdk.NewProviderClient(channel),
 	}
