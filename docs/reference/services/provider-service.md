@@ -9,7 +9,7 @@ This service helps ecosystem providers with data management and onboarding. This
 Users can be onboarded as participants in the ecosystem by sending an invitation and a security code. This code can be sent directly through them using existing platforms or via email, SMS, etc.
 When users accept this invitation, they should do so using the service methods as described in [creating wallet with provider invitation](/reference/services/wallet-service/#create-wallet-with-provider-invitation)
 
-In Trinsic Ecosystems, participants can be Individuals or Organizations. This distinction is important, as providers have the ability to apply restrictions on what functionalities can be invoked by these participants. Additonally, Organizations have the ability to write their DID Document to a public ledger. Currently, the supported ledger is Sovrin, with ION and Element still in development.
+In Trinsic Ecosystems, participants can be Individuals or Organizations. This distinction is important, as providers have the ability to apply restrictions on what functionalities can be invoked by these participants. Additionally, Organizations have the ability to write their DID Document to a public ledger. Currently, the supported ledger is Sovrin, with ION and Element still in development.
 
 === "Trinsic CLI"
     ```bash
@@ -60,3 +60,178 @@ In Trinsic Ecosystems, participants can be Individuals or Organizations. This di
     ```
 
 The `invitationId` in the response contains the security code that users must supply when creating their wallet. If using email method in onboarding, they will receive this code in their email.
+
+### Check Invitation Status
+
+User invitation status can be checked with the provided `invitation id`. It returns an `InvitationStatusResponse` object. ***TODO: Link to protobuf***.
+
+=== "Trinsic CLI"
+    ```bash
+    TODO
+    ```
+=== "TypeScript"
+    ```typescript
+    import { ProviderService, ParticipantType } from "@trinsic/trinsic";
+
+    const providerService = new ProviderService();
+
+    const inviteResponse = await providerService.invitationStatus("INVITATION ID");
+
+    console.log(inviteResponse.getInvitationId());
+    ```
+=== "C#"
+    ```csharp
+    using Trinsic;
+
+    var providerService = new ProviderService();
+
+    let invitationStatus = await providerService.InvitationStatus("INVITATION ID");
+    ```
+
+=== "Python"
+    ```python
+    from trinsic.services import ProviderService
+  
+    response = await provider_service.invitation_status(invitation_id="INVITATION ID")
+    ```
+
+The `invitationId` in the response contains the security code that users must supply when creating their wallet. If using email method in onboarding, they will receive this code in their email.
+
+## Credential Templates
+
+Credential Templates are json templates that help issuers save context when issuing credentials. 
+
+When issuing a credential through Trinsic, it's as simple as adding the attributes to the credential template and then issuing it. 
+
+These credential templates can be shared between issuers in an ecosystem. 
+
+A template is a saved JSON-LD schema that is used to define/create credentials and verification. 
+
+### Get
+
+=== "Trinsic CLI"
+    ```bash
+    
+    ```
+=== "TypeScript"
+    ```typescript
+    
+    ```
+=== "C#"
+    ```csharp
+    
+    ```
+
+=== "Python"
+    ```python
+    
+    ```
+
+=== "Go"
+    ```golang
+    
+    ```
+=== "Java"
+    ```java
+    
+    ```
+=== "Ruby"
+    ```ruby
+    
+    ```
+
+### Search
+
+=== "Trinsic CLI"
+    ```bash
+    
+    ```
+=== "TypeScript"
+    ```typescript
+    
+    ```
+=== "C#"
+    ```csharp
+    
+    ```
+
+=== "Python"
+    ```python
+    
+    ```
+
+=== "Go"
+    ```golang
+    
+    ```
+=== "Java"
+    ```java
+    
+    ```
+
+=== "Ruby"
+    ```ruby
+
+    ```
+
+### Update
+
+=== "Trinsic CLI"
+    ```bash
+    
+    ```
+=== "TypeScript"
+    ```typescript
+    
+    ```
+=== "C#"
+    ```csharp
+    
+    ```
+
+=== "Python"
+    ```python
+    
+    ```
+
+=== "Go"
+    ```golang
+    
+    ```
+=== "Java"
+    ```java
+    
+    ```
+=== "Ruby"
+    ```ruby
+
+    ```
+
+### Delete
+
+=== "Trinsic CLI"
+    ```bash
+    
+    ```
+=== "TypeScript"
+    ```typescript
+    
+    ```
+=== "C#"
+    ```csharp
+    
+    ```
+
+=== "Python"
+    ```python
+    
+    ```
+
+=== "Go"
+    ```golang
+    
+    ```
+=== "Java"
+    ```java
+    
+    ```
