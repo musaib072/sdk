@@ -13,6 +13,9 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *
+ */
 public abstract class ServiceBase {
     private static final Hasher hasher = Blake3.newHasher();
     protected UniversalWallet.WalletProfile profile;

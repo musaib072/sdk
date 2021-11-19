@@ -12,26 +12,47 @@ import trinsic.services.verifiablecredentials.v1.VerifiableCredentials;
 
 import java.util.HashMap;
 
+/**
+ * Wrapper for the [Wallet Service](/reference/services/wallet-service/)
+ */
 public class TrinsicWalletService extends ServiceBase {
     public final Channel channel;
     public final WalletGrpc.WalletBlockingStub walletClient;
     public final CredentialGrpc.CredentialBlockingStub credentialClient;
 
+    /**
+     * Initialize connection to the server
+     * @param config Server configuration to connect
+     */
     public TrinsicWalletService(CommonOuterClass.ServerConfig config) {
         this.channel = TrinsicUtilities.getChannel(config);
         this.walletClient = WalletGrpc.newBlockingStub(this.channel);
         this.credentialClient = CredentialGrpc.newBlockingStub(this.channel);
     }
 
+    /**
+     * Close the channel
+     * @throws InterruptedException
+     */
     public void shutdown() throws InterruptedException {
         super.shutdown((ManagedChannel) this.channel);
     }
 
+    /**
+     * Connect to the appropriate external identity by email
+     * @param email Email address
+     * @return `ConnectResponse`
+     */
     public UniversalWallet.ConnectResponse registerOrConnect(String email) {
         return this.walletClient.connectExternalIdentity(UniversalWallet.ConnectRequest.newBuilder()
                 .setEmail(email).build());
     }
 
+    /**
+     * [Create a new wallet](/reference/services/wallet-service/#create-wallet)
+     * @param securityCode Optional security code to use from a provider initiated invitation
+     * @return `WalletProfile` of the created wallet
+     */
     public UniversalWallet.WalletProfile createWallet(String securityCode) {
         securityCode = securityCode == null ? "" : securityCode;
 
@@ -46,6 +67,13 @@ public class TrinsicWalletService extends ServiceBase {
                 .build();
     }
 
+    /**
+     *  [Issue a new credential](/reference/services/wallet-service/#issue-credential)
+     * @param document `HashMap` describing the credential
+     * @return `HashMap` with the issued credential
+     * @throws InvalidProtocolBufferException
+     * @throws DidException
+     */
     public HashMap issueCredential(HashMap document) throws InvalidProtocolBufferException, DidException {
         var request = VerifiableCredentials.IssueRequest.newBuilder()
                 .setDocument(TrinsicUtilities.createPayloadString(document)).build();
